@@ -18,30 +18,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: maven
 
-      - name: Compile Java code
-        run: |
-          mkdir -p WEB-INF/classes
-          if [ -d "src/com/Controller" ] && [ "$(ls -A src/com/Controller/*.java 2>/dev/null)" ]; then
-            javac -d WEB-INF/classes -sourcepath src src/com/Controller/*.java
-          fi
-          if [ -d "src/com/ConnectionFactory" ] && [ "$(ls -A src/com/ConnectionFactory/*.java 2>/dev/null)" ]; then
-            javac -d WEB-INF/classes -sourcepath src src/com/ConnectionFactory/*.java
-          fi
-          if [ -d "src/com/Model" ] && [ "$(ls -A src/com/Model/*.java 2>/dev/null)" ]; then
-            javac -d WEB-INF/classes -sourcepath src src/com/Model/*.java
-          fi
-
-      - name: Package WAR file
-        run: |
-          jar cvf mywebapp.war -C WEB-INF/ .
-          mkdir -p target
-          mv mywebapp.war target/
+      - name: Build with Maven
+        run: mvn clean package
 
       - name: Deploy to Tomcat
         env:
           TOMCAT_HOST: ${{ secrets.TOMCAT_HOST }}
-          TOMCAT_USER: "root"
-          TOMCAT_PASSWORD: ""
+          TOMCAT_USER: ${{ secrets.TOMCAT_USER }}
+          TOMCAT_PASSWORD: ${{ secrets.TOMCAT_PASSWORD }}
         run: |
-          curl --upload-file target/mywebapp.war "http://root:@${{ secrets.TOMCAT_HOST }}:8080/manager/text/deploy?path=/mywebapp&update=true"
+          curl -u $TOMCAT_USER:$TOMCAT_PASSWORD --upload-file target/vottingApplication.war "http://$TOMCAT_HOST:8080/manager/text/deploy?path=/vottingApplication&update=true"
