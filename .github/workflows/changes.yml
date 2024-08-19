@@ -22,7 +22,15 @@ jobs:
       - name: Compile Java code
         run: |
           mkdir -p WEB-INF/classes
-          javac -d WEB-INF/classes -sourcepath src src/com/Controller/*.java src/com/ConnectionFactory/*.java src/com/Model/*.java
+          if [ -d "src/com/Controller" ] && [ "$(ls -A src/com/Controller/*.java 2>/dev/null)" ]; then
+            javac -d WEB-INF/classes -sourcepath src src/com/Controller/*.java
+          fi
+          if [ -d "src/com/ConnectionFactory" ] && [ "$(ls -A src/com/ConnectionFactory/*.java 2>/dev/null)" ]; then
+            javac -d WEB-INF/classes -sourcepath src src/com/ConnectionFactory/*.java
+          fi
+          if [ -d "src/com/Model" ] && [ "$(ls -A src/com/Model/*.java 2>/dev/null)" ]; then
+            javac -d WEB-INF/classes -sourcepath src src/com/Model/*.java
+          fi
 
       - name: Package WAR file
         run: |
