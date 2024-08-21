@@ -38,3 +38,6 @@ jobs:
 
     - name: Generate Dependency Graph
       run: mvn depgraph:aggregate
+      
+    - name: Set an output
+      run: echo "my-output=some value" >> $GITHUB_ENV
