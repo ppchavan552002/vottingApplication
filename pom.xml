@@ -76,6 +76,7 @@
  <build>
   <plugins>
   	
+  	
   	<plugin>
 	  <groupId>com.github.ferstl</groupId>
 	  <artifactId>depgraph-maven-plugin</artifactId>
